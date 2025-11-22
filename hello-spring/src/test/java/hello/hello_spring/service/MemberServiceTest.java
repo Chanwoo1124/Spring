@@ -48,6 +48,7 @@ class MemberServiceTest {
         member2.setName("spring");
 
         memberService.join(member1);
+        //짐작 가는 오류
         IllegalStateException e = assertThrows(IllegalStateException.class,
                 () -> memberService.join(member2));//예외가 발생해야 한다.
 

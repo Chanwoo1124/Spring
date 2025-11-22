@@ -21,11 +21,13 @@ class MemoryMemberRepositoryTest {
 
     @Test
     public void save(){
+        //given
         Member member = new Member();
         member.setName("spring");
         repository.save(member);
+        //when
         Member result = repository.findById(member.getId()).get();
-
+        //then   기대한 값이 맞는지 검사
         assertThat(member).isEqualTo(result);
     }
     @Test
