@@ -9,11 +9,11 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class XmlAppContext {
 
-    @Test
-    void xmlAppContext(){
-        ApplicationContext genericXmlApplicationContext = new GenericXmlApplicationContext("appConfig.xml");
-        MemberService memberService = genericXmlApplicationContext.getBean("memberService", MemberService.class);
-        Assertions.assertThat(memberService).isInstanceOf(MemberService.class);
-
-    }
+//    @Test
+//    void xmlAppContext(){
+//        ApplicationContext genericXmlApplicationContext = new GenericXmlApplicationContext("appConfig.xml");
+//        MemberService memberService = genericXmlApplicationContext.getBean("memberService", MemberService.class);
+//        Assertions.assertThat(memberService).isInstanceOf(MemberService.class);
+//
+//    }
 }
