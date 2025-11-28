@@ -29,7 +29,7 @@ public class AllBeanTest {
 
         for (int i = 0; i < discountService.policyMap.size(); i++) {
             Set<String> strings = discountService.policyMap.keySet();
-            discountService.policyMap.get(strings.)
+            DiscountPolicy discountPolicy = discountService.policyMap.get(strings);
 
         }
     }
