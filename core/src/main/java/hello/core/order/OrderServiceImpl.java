@@ -2,6 +2,7 @@ package hello.core.order;
 
 import hello.core.annotation.MainDiscountPolicy;
 import hello.core.discount.DiscountPolicy;
+import hello.core.discount.RateDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
