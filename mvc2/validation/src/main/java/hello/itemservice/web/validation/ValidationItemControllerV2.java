@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,6 +28,12 @@ import java.util.Map;
 public class ValidationItemControllerV2 {
 
     private final ItemRepository itemRepository;
+    private final ItemValidator itemValidator;
+
+    @InitBinder
+    public void init(WebDataBinder dataBinder){
+        dataBinder.addValidators(itemValidator);
+    }
 
     @GetMapping
     public String items(Model model) {
@@ -89,27 +96,8 @@ public class ValidationItemControllerV2 {
     @PostMapping("/add")
     public String addItemV4(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
-        //검증 오류 결과를 보관
+        itemValidator.validate(item, bindingResult);
 
-
-        if(!StringUtils.hasText(item.getItemName())){
-            bindingResult.rejectValue("itemName","required");
-        }
-        if(item.getPrice() ==null || item.getPrice() < 1000 || item.getPrice() > 1000000){
-
-            bindingResult.rejectValue("price", "range", new Object[]{1000, 1000000}, null);
-        }
-
-        if(item.getQuantity() == null || item.getQuantity() >= 9999){
-            bindingResult.rejectValue("quantity", "max", new Object[]{9999},null);
-        }
-
-        if(item.getPrice() != null && item.getQuantity() != null ){
-            int resultPrice = item.getPrice() * item.getQuantity();
-            if (resultPrice < 10000){
-                bindingResult.reject("totalPriceMin" , new Object[]{10000,resultPrice}, null);
-            }
-        }
 
         //검증에 실패하면 다시 입력 폼으로
         if (bindingResult.hasErrors()){

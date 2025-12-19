@@ -14,7 +14,6 @@ public class MessageCodesResolverTest {
     @Test
     void messageCodesResolverObject(){
         String[] messageCodes = codesResolver.resolveMessageCodes("required", "item");
-        System.out.println(Arrays.toString(messageCodes));
         Assertions.assertThat(messageCodes).containsExactly("required.item","required");
     }
 
