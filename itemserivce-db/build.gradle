@@ -1,44 +1,77 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.5'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.6.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+// 1. QueryDSL 버전 명시 (변수로 빼는 게 관리하기 편합니다)
+def querydslVersion = '5.0.0'
+
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    //JPA, 스프링 데이터 JPA 추가
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    //mybatis 추가
+    // MyBatis (2.x용 버전 유지)
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 
-//JdbcTemplate 추가
-    //implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-//H2 데이터베이스 추가
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // QueryDSL
+    implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
+    // 2. 복잡한 변수 대신 위에서 정의한 변수 사용 & :jpa 사용 (스프링부트 2는 javax라서)
+    annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jpa"
+
+    // ⚠️ 중요: 스프링 부트 2.x에서는 jakarta... 설정을 다 지워야 합니다!
+    // 대신 javax 관련 의존성이 혹시 필요할 수 있어서 아래 2개를 넣어주는 게 안전합니다.
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api" // (x) -> 2.x에선 불필요하거나 javax 써야 함
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api" // (x)
+
+    // H2 데이터베이스
     runtimeOnly 'com.h2database:h2'
+
+    // 롬복
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//테스트에서 lombok 사용
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+// ==========================================
+// 3. QueryDSL 빌드 설정 (Q파일 생성 위치 지정)
+// ==========================================
+def querydslDir = "$buildDir/generated/querydsl"
+
+sourceSets {
+    main.java.srcDirs += [ querydslDir ]
+}
+
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+
+clean {
+    // clean 실행 시 생성된 Q파일들 삭제
+    delete file(querydslDir)
 }
