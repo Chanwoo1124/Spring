@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    //비밀번호 암호화용 Bean
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -23,6 +24,11 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable());
+        //로그인 필터
+        http
+                .formLogin(login -> login
+                        .loginProcessingUrl("/login")
+                        .loginPage("/login"));
 
 
         return http.build();
