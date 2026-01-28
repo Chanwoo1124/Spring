@@ -31,6 +31,18 @@ public class SecurityConfig {
                         .loginPage("/login"));
 
 
+        //인가 필터에 대한 설정
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/join").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/user").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .anyRequest().denyAll()
+                );
+
+
         return http.build();
     }
 }
