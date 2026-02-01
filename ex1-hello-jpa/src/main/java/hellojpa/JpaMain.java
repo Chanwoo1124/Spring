@@ -15,19 +15,21 @@ public class JpaMain {
         tx.begin();
 
         try{
-            Movie movie = new Movie();
-            movie.setDirector("aaa");
-            movie.setActor("bbbb");
-            movie.setName("바람과함께사라지다");
-            movie.setPrice(1000);
 
-            em.persist(movie);
+            Child child1 = new Child();
+            Child child2 = new Child();
+
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(parent);
 
             em.flush();
             em.clear();
 
-            Movie movie1 = em.find(Movie.class, movie.getId());
-            System.out.println("movie1 = " + movie1);
+            Parent parent1 = em.find(Parent.class, parent.getId());
+            parent1.getChildList().remove(0);
 
 
             tx.commit();
