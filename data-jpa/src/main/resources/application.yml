@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/datajpa
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  # ★ 중요: jpa가 spring 안쪽으로 들어와야 합니다! (스페이스 2칸 들여쓰기)
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        # show_sql: true
+
+logging.level:
+  org.hibernate.SQL: debug
