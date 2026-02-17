@@ -8,7 +8,7 @@ public class SampleController {
     @GetMapping("/")
     public String index() {
 
-        if (authchec)
+
 
 
         return "index";
